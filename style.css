@@ -1,0 +1,107 @@
+@import "node_modules/ol/ol.css";
+
+body {
+  font-family: system-ui, sans-serif;
+  position: relative;
+  display: grid;
+  min-width: 100vw;
+  max-width: 100vw;
+  max-height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  grid-template-rows: 5em auto 12em;
+}
+
+body.open {
+  grid-template-rows: 4em auto 20em;
+}
+
+#titleWebkarte{
+  font-size: 16px;
+  margin: 0px;
+}
+
+#leadtextWebkarte{
+  font-size: 12px;
+  margin: 0px;
+}
+:root{
+  --ol-subtle-background-color: rgba(128, 128, 128, 0)
+}
+
+#position{
+  color: black;
+  font-size: 20px ;
+  text-align: center;
+  padding-top: 10px;
+}
+
+#map {
+  width: 100%;
+  height: auto;
+}
+
+#errorNoStation{
+  padding-left: 10px;
+  color: red;
+}
+
+#searching{
+  display: flex;
+  flex-direction: column;
+  background-color: #eb9791;
+}
+
+.searchingHeader{
+  font-size: 15px;
+  margin-bottom: 2px;
+  padding-left: 10px;
+}
+
+.searchingDepartures{
+  font-size: 13px;
+  margin-top: 2px;
+  padding-left: 10px;
+  padding-bottom: 6px;
+  margin-bottom: 5px;
+}
+
+.ol-attribution{
+  top: .5em;
+  bottom: 0em;
+  max-height: 4em;
+  text-align: center;
+}
+
+.ol-attribution li{
+  color: #666;    
+}
+
+.abfahrtstabelle{
+  font-size: 9px;
+  overflow-x: hidden;
+  overflow-y: auto; 
+  color: whitesmoke;
+
+}
+
+.Verbindung{
+  border-bottom: 2px dashed whitesmoke;
+  padding: 10px;
+  font-size: 12px;
+  padding-bottom: 20px;
+}
+
+.delay{
+  color: red;
+}
+
+.preciseTableInfos{
+  font-size: 10px;
+}
+
+#Station0{
+  border-top: 2px dashed whitesmoke;
+}
