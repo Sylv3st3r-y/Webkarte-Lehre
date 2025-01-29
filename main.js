@@ -5,8 +5,8 @@ import {fromLonLat, toLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import GeoJSON from 'ol/format/GeoJSON';  
 import apply from 'ol-mapbox-style';
-import { Circle as CircleStyle, Fill, Icon, Stroke, Style } from 'ol/style';
-import {Attribution } from 'ol/control.js';
+import {Icon, Style} from 'ol/style';
+
 
 const initialCenter = fromLonLat([7.015241, 46.633229]);
 const initialZoom = 14;
@@ -20,7 +20,7 @@ const currentZoom = mapView.getZoom()
 let haltestellenAlle = new VectorLayer({
   source: new VectorSource({
     format: new GeoJSON(),
-    url: 'Haltestellen_red.geojson'
+    url: 'Haltestellen.geojson'
   }),
   style: function zommrangeFromResolution(feature, resolution){
     const zoomLevel = map.getView().getZoomForResolution(resolution) 
