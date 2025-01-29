@@ -1,6 +1,6 @@
 export default {
+  base: '/Webkarte-Lehre/',
   build: {
     sourcemap: true,
-    base: '/Webkarte-Lehre/'
   }
 }
