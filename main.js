@@ -55,7 +55,7 @@ const map = new Map({
   ],
   view: mapView
   })
-
+//Die Funktion für die Berehcnung der Zeitdifferenz zwischen jetzt und die nächste Abfahrt
 function timeDifference(zeitInMS){
   let zeitInM = zeitInMS/60000
   let zeitInH = zeitInM/60
@@ -68,7 +68,6 @@ if(zeitInM<=60 && zeitInM > 1){
   }
   else{
     zeitInM = Math.floor(zeitInM) - Math.floor(zeitInH) * 60
-    console.log(zeitInM)
     return Math.floor(zeitInH) + ' Stunden und ' + zeitInM + ' Minuten'
   }
 }
@@ -79,7 +78,7 @@ map.on('singleclick', function (evt) {
   let feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
     return feature;
   });
-  //Überprüft ob ein Feature geklickt wird
+//Überprüft ob ein Feature geklickt wird
   if (feature && haltestellenAlle.getSource().hasFeature(feature)) {
     let haltestellenProperties = feature.getProperties()
     let stationName=haltestellenProperties.Name
@@ -94,7 +93,7 @@ map.on('singleclick', function (evt) {
       return data.stationboard
     }
 
-    //Hier werden die Zeittabellen erstellt
+//Hier werden die Zeittabellen erstellt
     let zeitdaten =  fetchTimetable();
     zeitdaten.then(value =>  {
       if(value.length == 0){
@@ -108,68 +107,40 @@ map.on('singleclick', function (evt) {
       let abfahrtDifferenz = departureDate-todayDate
       innerHTMLTimetable = innerHTMLTimetable +
       `
-      <p class=Verbindung id=Station${x}>Für ${zeitdaten[x].to}, Abfahrt in ${timeDifference(abfahrtDifferenz)}<p>
+      <div class=Verbindung id=Station${x}>Für ${zeitdaten[x].to}, Abfahrt in ${timeDifference(abfahrtDifferenz)}</div>
       `
       }
-      console.log(zeitdaten)
       content.innerHTML = 
       `
       <h1 class=searchingHeader>${stationName}
       <h2 class=searchingDepartures>Nächste Abfahrten:</h2>
       <div class = abfahrtstabelle>${innerHTMLTimetable}</div>
       `
-      console.log(this.innerHTML)
-      //Die Zeittabelle wird erweitert so dass beim Klicken mehr Infos vorkommen
+//Die Zeittabelle wird erweitert so dass beim Klicken mehr Infos vorkommen
       const myTimetable = document.getElementsByClassName('Verbindung');
       Array.from(myTimetable).forEach(element => element.addEventListener('click', function(e){
+        let open = element.classList.contains("open");
 
-        document.body.classList.add("open")
-        const clickedDiv = e.target.id
-        if(clickedDiv != 'Station0'){
-          console.log('test')
-        }else{    
-        let passingList = zeitdaten[Number(e.target.id.replace('Station', ''))].passList
-        let dateDepartureStation = new Date(passingList[0].departureTimestamp * 1000)
-        let dayDate = dateDepartureStation.getDate()
-        let monthDate = dateDepartureStation.getMonth() + 1
-        let hoursDate = dateDepartureStation.getHours()
-        let minutesDate = dateDepartureStation.getMinutes()
-        let delay = passingList[0].delay
-        let innerHTMLPassing;
-        if(dayDate.toString().length == 1){
-          dayDate = '0' + dayDate.toString()
-        }
+        if(open) {
+          element.classList.remove("open")
+          element.removeChild(element.querySelector("div.inner"));
 
-        if(monthDate.toString().length == 1){
-          monthDate = '0' + monthDate.toString()
-        }
+          if(document.body.querySelectorAll("div.inner").length == 0) {
+            document.body.classList.remove("open")
+          }
+        } else {
+          document.body.classList.add("open")
+          element.classList.add("open")
 
-        if(hoursDate.toString().length == 1){
-          hoursDate = '0' + hoursDate.toString()
-        }
-
-        if(minutesDate.toString().length == 1){
-          minutesDate = '0' + minutesDate.toString()
-        }
-
-        if(delay != 0){
-          innerHTMLPassing = 
-          `
-          <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
-          `  
-        }else{innerHTMLPassing = 
-          `
-          <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
-          `}
-
-        for(let x=1; x<passingList.length-1;x++){
-          let departureTime = new Date(passingList[x].departure)
-          let stationName = passingList[x].station.name
-          dayDate = departureTime.getDate()
-          monthDate = departureTime.getMonth() + 1
-          hoursDate = departureTime.getHours()
-          minutesDate = departureTime.getMinutes()
-          delay = passingList[x].delay
+          let passingList = zeitdaten[Number(e.target.id.replace('Station', ''))].passList
+          let dateDepartureStation = new Date(passingList[0].departureTimestamp * 1000)
+          let dayDate = dateDepartureStation.getDate()
+          let monthDate = dateDepartureStation.getMonth() + 1
+          let hoursDate = dateDepartureStation.getHours()
+          let minutesDate = dateDepartureStation.getMinutes()
+          let delay = passingList[0].delay
+          let innerHTMLPassing;
+          innerHTMLPassing = `<div class="inner">`
 
           if(dayDate.toString().length == 1){
             dayDate = '0' + dayDate.toString()
@@ -188,18 +159,90 @@ map.on('singleclick', function (evt) {
           }
 
           if(delay != 0){
-            innerHTMLPassing = innerHTMLPassing + 
+            innerHTMLPassing += 
             `
             <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
             `  
-          }else{innerHTMLPassing = innerHTMLPassing + 
+          }else{innerHTMLPassing += 
             `
             <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
             `}
+  //Hier wird die Funktion geschrieben um die Stationenliste zu berechnen und darzustellen 
+          for(let x=1; x<passingList.length;x++){
+            let departureTime = new Date(passingList[x].departure)
+            let stationName = passingList[x].station.name
+            dayDate = departureTime.getDate()
+            monthDate = departureTime.getMonth() + 1
+            hoursDate = departureTime.getHours()
+            minutesDate = departureTime.getMinutes()
+            delay = passingList[x].delay
+
+            if(dayDate.toString().length == 1){
+              dayDate = '0' + dayDate.toString()
+            }
+
+            if(monthDate.toString().length == 1){
+              monthDate = '0' + monthDate.toString()
+            }
+
+            if(hoursDate.toString().length == 1){
+              hoursDate = '0' + hoursDate.toString()
+            }
+
+            if(minutesDate.toString().length == 1){
+              minutesDate = '0' + minutesDate.toString()
+            }
+  //Hier wird die Funktion für die letzte Station der passing List 
+            while(x==passingList.length-1){
+              let arrivalTime = new Date(passingList[x].arrival)
+              dayDate = arrivalTime.getDate()
+              monthDate = arrivalTime.getMonth() + 1
+              hoursDate = arrivalTime.getHours()
+              minutesDate = arrivalTime.getMinutes()
+              delay = passingList[x].delay
+    
+              if(dayDate.toString().length == 1){
+                dayDate = '0' + dayDate.toString()
+              }
+    
+              if(monthDate.toString().length == 1){
+                monthDate = '0' + monthDate.toString()
+              }
+    
+              if(hoursDate.toString().length == 1){
+                hoursDate = '0' + hoursDate.toString()
+              }
+    
+              if(minutesDate.toString().length == 1){
+                minutesDate = '0' + minutesDate.toString()
+              }
+    
+              if(delay != 0){
+                innerHTMLPassing = innerHTMLPassing + 
+                `
+                <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
+                `  
+              }else{innerHTMLPassing = innerHTMLPassing + 
+                `
+                <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
+                `}
+              x++
+              this.innerHTML = this.innerHTML + innerHTMLPassing + `<div>`;
+              return;
+            }
+  //Ab hier passiert die Schlaufe immer wieder bis es zur letzte Station kommt
+            if(delay != 0){
+              innerHTMLPassing +=  
+              `
+              <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
+              `  
+            }else{innerHTMLPassing += 
+              `
+              <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
+              `}
+          }
         }
-        this.innerHTML = this.innerHTML + innerHTMLPassing
-        console.log(this.innerHTML)
-      }}))
+      }))
     }
     })  
  
@@ -217,5 +260,5 @@ apply(map, styleJson).then(() => {
     count++;
   })
 
-  haltestellenAlle.getSource().setAttributions('Gemacht von Yves Magne, Geomatiker, 4.Lehrjahr')
+  haltestellenAlle.getSource().setAttributions('Gemacht von Yves Magne, Geomatiker, 4.Lehrjahr, GMK21, 30.01.2025')
 })

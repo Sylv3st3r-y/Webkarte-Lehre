@@ -15,7 +15,7 @@ body {
 }
 
 body.open {
-  grid-template-rows: 4em auto 20em;
+  grid-template-rows: 4em auto 24em;
 }
 
 #titleWebkarte{
@@ -84,7 +84,6 @@ body.open {
   overflow-x: hidden;
   overflow-y: auto; 
   color: whitesmoke;
-
 }
 
 .Verbindung{
