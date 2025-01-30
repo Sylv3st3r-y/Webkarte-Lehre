@@ -1,4 +1,4 @@
-# öV Webkart
+# öV Webkarte
 
 Dieses Projekt wurde im Rahmen der Schule BBZH gestartet.
 
