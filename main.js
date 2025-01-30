@@ -8,8 +8,8 @@ import apply from 'ol-mapbox-style';
 import {Icon, Style} from 'ol/style';
 
 
-const initialCenter = fromLonLat([7.015241, 46.633229]);
-const initialZoom = 14;
+const initialCenter = fromLonLat([8.259006, 46.825785]);
+const initialZoom = 6.7;
 const mapView = new View({
   center: initialCenter,
   zoom: initialZoom})
