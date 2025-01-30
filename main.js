@@ -55,7 +55,7 @@ const map = new Map({
   ],
   view: mapView
   })
-//Die Funktion für die Berehcnung der Zeitdifferenz zwischen jetzt und die nächste Abfahrt
+//Die Funktion für die Berechnung der Zeitdifferenz zwischen jetzt und die nächste Abfahrt
 function timeDifference(zeitInMS){
   let zeitInM = zeitInMS/60000
   let zeitInH = zeitInM/60
