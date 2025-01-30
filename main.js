@@ -28,16 +28,16 @@ let haltestellenAlle = new VectorLayer({
       return new Style({
         image: new Icon({
           src : 'Icons/Icon_Train.png',
-          width: currentZoom*1.5,
-          height: currentZoom*1.5,
+          width: 20,
+          height: 20,
         })
       })
     } else if(zoomLevel>=14 && feature.get("Verkehrsmittel_Bezeichnung") != 'Zug'){
       return new Style({
         image: new Icon({
           src : 'Icons/Icon_Bus.png',
-          width: currentZoom*1.5,
-          height: currentZoom*1.5,
+          width: 15,
+          height: 15,
         })
       })
     } else{
