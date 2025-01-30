@@ -117,4 +117,4 @@ ${a}`)!==100){const l=e.replace("{font-family}",a.replace(/ /g,"-").toLowerCase(
               `:w+=`
               <p class=preciseTableInfos>${R} ---- ${_}.${y} ${v}:${x}</p>          
               `}}}))}})}});const $x="https://api.maptiler.com/maps/fc8c52a1-3886-49fa-b244-25e3e5d3dd4f/style.json?key=A6OgbJ7Zc6fb2G5wId2F";Wx(Gr,$x).then(()=>{let n=0;Gr.getLayers().forEach(e=>{n<=4&&e.getSource().setAttributions([]),n++}),Po.getSource().setAttributions("Gemacht von Yves Magne, Geomatiker, 4.Lehrjahr, GMK21, 30.01.2025")});
-//# sourceMappingURL=index-KfPpL_N-.js.map
+//# sourceMappingURL=index-BBKb6c-z.js.map
