@@ -100,7 +100,6 @@ map.on('singleclick', function (evt) {
         content.innerHTML = `<p id=errorNoStation>Für diese Station wurde keine Abfahrten gefunde.<br> Überprüfen sie ob sie von der SBB betrieben wird.<p>`
       }else{      
       zeitdaten = value
-
       let innerHTMLTimetable= ''
       for(let x=0;x<value.length; x++){
       let departureDate = new Date(zeitdaten[x].stop.departureTimestamp*1000)
