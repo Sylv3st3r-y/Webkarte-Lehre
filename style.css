@@ -11,12 +11,12 @@ body {
   overflow: hidden;
   margin: 0;
   padding: 0;
-  grid-template-rows: 5em auto 12em;
+  grid-template-rows: 5em auto 20em;
   color: whitesmoke;
 }
 
 body.open {
-  grid-template-rows: 4em auto 24em;
+  grid-template-rows: 4em auto 30em;
 }
 
 #titleWebkarte{
