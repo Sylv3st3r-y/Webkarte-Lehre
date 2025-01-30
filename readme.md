@@ -1,18 +1,12 @@
-# OpenLayers + Vite
+# öV Webkart
 
-This example demonstrates how the `ol` package can be used with [Vite](https://vitejs.dev/).
+Dieses Projekt wurde im Rahmen der Schule BBZH gestartet.
 
-To get started, run the following (requires Node 14+):
+Ich habe eine Webkarte erstellt, wo Verbindungen von jeder Haltestelle zu sehen sind
 
-    npx create-ol-app my-app --template vite
+Ich habe sie mit Hilfe von maptiler, Open Layers, OpenStreetMap, swisstopo und Open Transport Data entwickelt.
 
-Then change into your new `my-app` directory and start a development server (available at http://localhost:5173):
+Yves Magne, GMK21, 30.01.2025
 
-    cd my-app
-    npm start
 
-To generate a build ready for production:
 
-    npm run build
-
-Then deploy the contents of the `dist` directory to your server.  You can also run `npm run serve` to serve the results of the `dist` directory for preview.
