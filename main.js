@@ -8,12 +8,26 @@ import apply from 'ol-mapbox-style';
 import {Icon, Style} from 'ol/style';
 
 
-const initialCenter = fromLonLat([8.259006, 46.825785]);
+let initialCenter = fromLonLat([8.259006, 46.825785]);
 const initialZoom = 6.7;
 const mapView = new View({
   center: initialCenter,
   zoom: initialZoom})
 const currentZoom = mapView.getZoom()
+
+if('geolocation' in navigator){
+  navigator.geolocation.getCurrentPosition((position) => {
+    initialCenter = fromLonLat([position.coords.longitude, position.coords.latitude])
+
+  mapView.setCenter(initialCenter)
+  mapView.setZoom(14)
+},
+(error) => {
+  console.error('Fehler bei der Geolokalisierung', error.message);
+})
+} else{
+  console.error('Die Geolokalisierung wird nicht unterstützt')
+}
 
 
 
@@ -55,6 +69,7 @@ const map = new Map({
   ],
   view: mapView
   })
+
 //Die Funktion für die Berechnung der Zeitdifferenz zwischen jetzt und die nächste Abfahrt
 function timeDifference(zeitInMS){
   let zeitInM = zeitInMS/60000
@@ -157,15 +172,17 @@ map.on('singleclick', function (evt) {
             minutesDate = '0' + minutesDate.toString()
           }
 
-          if(delay != 0){
+          if(delay != 0 && delay != null){
             innerHTMLPassing += 
-            `
+            ` 
             <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
             `  
-          }else{innerHTMLPassing += 
+          }else{  
+            innerHTMLPassing += 
             `
             <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
             `}
+            console.log(innerHTMLPassing)
   //Hier wird die Funktion geschrieben um die Stationenliste zu berechnen und darzustellen 
           for(let x=1; x<passingList.length;x++){
             let departureTime = new Date(passingList[x].departure)
@@ -216,7 +233,7 @@ map.on('singleclick', function (evt) {
                 minutesDate = '0' + minutesDate.toString()
               }
     
-              if(delay != 0){
+              if(delay != 0 && delay != null){
                 innerHTMLPassing = innerHTMLPassing + 
                 `
                 <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
@@ -230,7 +247,7 @@ map.on('singleclick', function (evt) {
               return;
             }
   //Ab hier passiert die Schlaufe immer wieder bis es zur letzte Station kommt
-            if(delay != 0){
+            if(delay != 0 && delay != null){
               innerHTMLPassing +=  
               `
               <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}<span class=delay> + ${delay}</span></p>          
@@ -247,6 +264,9 @@ map.on('singleclick', function (evt) {
  
   }
 });
+
+//Hier werden die Piktogramme angepasst anhand von der Passinglist. 
+
 
 const styleJson = 'https://api.maptiler.com/maps/fc8c52a1-3886-49fa-b244-25e3e5d3dd4f/style.json?key=A6OgbJ7Zc6fb2G5wId2F'
 
