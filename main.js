@@ -1,5 +1,5 @@
 import './style.css';
-import {Map, View} from 'ol';
+import {Feature, Map, View} from 'ol';
 import VectorLayer from 'ol/layer/Vector';
 import {fromLonLat, toLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
@@ -14,6 +14,7 @@ const mapView = new View({
   center: initialCenter,
   zoom: initialZoom})
 const currentZoom = mapView.getZoom()
+const todayDate = new Date()
 
 if('geolocation' in navigator){
   navigator.geolocation.getCurrentPosition((position) => {
@@ -34,7 +35,7 @@ if('geolocation' in navigator){
 let haltestellenAlle = new VectorLayer({
   source: new VectorSource({
     format: new GeoJSON(),
-    url: 'Haltestellen.geojson'
+    url: 'Haltestellen2.geojson'
   }),
   style: function zommrangeFromResolution(feature, resolution){
     const zoomLevel = map.getView().getZoomForResolution(resolution) 
@@ -89,7 +90,6 @@ if(zeitInM<=60 && zeitInM > 1){
 
 
 map.on('singleclick', function (evt) {
-  const todayDate = new Date()
   let feature = map.forEachFeatureAtPixel(evt.pixel, function (feature) {
     return feature;
   });
@@ -107,6 +107,29 @@ map.on('singleclick', function (evt) {
       const data = await response.json();
       return data.stationboard
     }
+
+//Hier wird das Piktogramm angepasst für die Starthaltestelle 
+   if(feature.get("Verkehrsmittel_Bezeichnung") === 'Zug'){
+    feature.setStyle(
+      new Style({
+        image: new Icon({
+          src : 'Icons/Icon_Train_start.png',
+          width: 20,
+          height: 20,
+        })
+      })
+    )
+   }else{
+    feature.setStyle(
+      new Style({
+      image: new Icon({
+        src : 'Icons/Icon_Bus_start.png',
+        width: 15,
+        height: 15,
+      })
+    })
+    )
+   };
 
 //Hier werden die Zeittabellen erstellt
     let zeitdaten =  fetchTimetable();
@@ -134,6 +157,13 @@ map.on('singleclick', function (evt) {
       const myTimetable = document.getElementsByClassName('Verbindung');
       Array.from(myTimetable).forEach(element => element.addEventListener('click', function(e){
         let open = element.classList.contains("open");
+        let passingList = zeitdaten[Number(e.target.id.replace('Station', ''))].passList
+
+
+        let lastStationCode = passingList[passingList.length-1].station.id
+
+        console.log()
+
 
         if(open) {
           element.classList.remove("open")
@@ -146,7 +176,7 @@ map.on('singleclick', function (evt) {
           document.body.classList.add("open")
           element.classList.add("open")
 
-          let passingList = zeitdaten[Number(e.target.id.replace('Station', ''))].passList
+         
           let dateDepartureStation = new Date(passingList[0].departureTimestamp * 1000)
           let dayDate = dateDepartureStation.getDate()
           let monthDate = dateDepartureStation.getMonth() + 1
@@ -182,7 +212,6 @@ map.on('singleclick', function (evt) {
             `
             <p class=preciseTableInfos>${stationName} ---- ${dayDate}.${monthDate} ${hoursDate}:${minutesDate}</p>          
             `}
-            console.log(innerHTMLPassing)
   //Hier wird die Funktion geschrieben um die Stationenliste zu berechnen und darzustellen 
           for(let x=1; x<passingList.length;x++){
             let departureTime = new Date(passingList[x].departure)
@@ -261,11 +290,11 @@ map.on('singleclick', function (evt) {
       }))
     }
     })  
- 
+
   }
 });
 
-//Hier werden die Piktogramme angepasst anhand von der Passinglist. 
+
 
 
 const styleJson = 'https://api.maptiler.com/maps/fc8c52a1-3886-49fa-b244-25e3e5d3dd4f/style.json?key=A6OgbJ7Zc6fb2G5wId2F'
